@@ -4,7 +4,7 @@
 
 	<meta charset="utf-8">
 
-	<title>App</title>
+	<title>Contacts</title>
 
 	<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
 	<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
@@ -13,71 +13,223 @@
 	<script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
 
 	<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.14/angular.min.js"></script>
+
 	<script>
 
-	var HelloCtrl = function ($scope) {
+	var contactsList = angular.module('contactsList', []);
 
-		$scope.val = 'test';
+	contactsList.controller('mainController', function ($scope) {
 
-		$scope.getVal = function () {
+		var contacts = window.localStorage.getItem('contactsList');
 
-			return $scope.val;
+		if( !contacts ) {
+			
+			$scope.contacts = [
+				{ 
+					id: 1,
+					name: 'Richard', 
+					surname: 'Brenson', 
+					phone: '+1 (233) 537-23-75', 
+					group: 'work' 
+				},
+				{ 
+					id: 2,
+					name: 'Jack', 
+					surname: '', 
+					phone: '+1 (566) 233-25-12', 
+					group: 'family' 
+				},
+				{ 
+					id: 3,
+					name: 'Susan', 
+					surname: 'Boyle', 
+					phone: '+44 (526) 674-45-83', 
+					group: '' 
+				}
+			];
+
+			window.localStorage.setItem('contactsList', JSON.stringify($scope.contacts));
+
+		} else {
+
+			$scope.contacts = JSON.parse(contacts);
+		}
+
+		$scope.modalFormSubmit = function (isValid) {
+
+			$scope.modalInfo.submitted = true;
+
+			if( isValid ) {
+
+				if( $scope.modalInfo.type === 'add' ) {
+
+					$scope.contacts.push({
+						id: 	 $scope.contacts.length + 1,
+						name: 	 $scope.modalInfo.name,
+						surname: $scope.modalInfo.surname,
+						phone: 	 $scope.modalInfo.phone,
+						group: 	 $scope.modalInfo.group,
+					});
+
+				} else if ( $scope.modalInfo.type === 'edit' &&
+							$scope.modalInfo.edit_id !== undefined ) {
+
+					$scope.contacts[ $scope.modalInfo.edit_id - 1 ] = {
+						id: 	 $scope.modalInfo.edit_id,
+						name: 	 $scope.modalInfo.name,
+						surname: $scope.modalInfo.surname,
+						phone: 	 $scope.modalInfo.phone,
+						group: 	 $scope.modalInfo.group,
+					};
+				}
+
+				window.localStorage.setItem('contactsList', JSON.stringify( $scope.contacts ));
+
+				$('#contactModal').modal('hide');			
+			}
 		};
-	}
-	</script>
+
+		$scope.showAddContact = function () {
+
+			$scope.modalInfo = {
+
+				type: 		'add',
+				title: 		'Add contact',
+				submitText: 'Create',
+
+				submitted: 	false,
+
+				name: 		'',
+				surname: 	'',
+				phone: 		'',
+				group: 		''
+			};
+
+			$('#contactModal').modal('show');
+		};
+
+		$scope.showEditContact = function (contact_id) {
+
+			var contact = $scope.contacts[ contact_id - 1 ];
+
+			$scope.modalInfo = {
+
+				type: 		'edit',
+				title: 		'Edit contact',
+				submitText: 'Save',
+
+				submitted: 	false,
+				edit_id: 	contact.id,
+
+				name: 		contact.name,
+				surname: 	contact.surname,
+				phone: 		contact.phone,
+				group: 		contact.group
+			};
+
+			$('#contactModal').modal('show');
+		};
+	});
+
+
+	</script> 	
+
 </head>
-<body ng-app ng-init="name = 'World'">
 
-<nav class="navbar navbar-default" role="navigation">
-  <div class="container-fluid">
-    <!-- Brand and toggle get grouped for better mobile display -->
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="navbar-brand" href="#">Contact list</a>
-    </div>
+<body ng-app="contactsList">
+
+<div ng-controller="mainController">
+
+	<nav class="navbar navbar-default" role="navigation">
+
+		<div class="container-fluid">
+
+			<div class="navbar-header">
+	      		<a class="navbar-brand" href="#">Contact list</a>
+	    	</div>
+
+			<form class="navbar-form navbar-left" role="search">
+
+			 	<div class="form-group">
+					<input type="search" class="form-control" ng-model="search_q" placeholder="Search">
+			  	</div>
+
+			</form>
+
+			<form class="navbar-form navbar-right">
+
+				<div class="form-group">
+					<button class="btn btn-primary" ng-click="showAddContact()">Add contact</button>
+			  	</div>
+
+			</form>
+		</div>
+	</nav>
 
 
-	<form class="navbar-form navbar-left" role="search">
-	  <div class="form-group">
-	    <input type="text" class="form-control" placeholder="Search">
-	  </div>
-	</form>
+	<div class="list-group">
 
-	<form class="navbar-form navbar-right">
-	  <div class="form-group">
-	    <button class="btn btn-primary">Add contact</button>
-	  </div>
-	</form>
+		<a href="#" class="list-group-item" ng-repeat="(key, contact) in contacts | filter:search_q | orderBy:['group','name']" ng-click="showEditContact(contact.id)">
 
-</div>
-</nav>
+	    	<h4 class="list-group-item-heading">{{contact.name}} {{contact.surname}} <span ng-show="contact.group">({{contact.group}})</span></h4>
 
-<div class="list-group">
-  <a href="#" class="list-group-item active">
-    <h4 class="list-group-item-heading">Yury Borunov (family)</h4>
-    <p class="list-group-item-text">+380 (63) 879-45-33</p>
-  </a>  
-  <a href="#" class="list-group-item">
-    <h4 class="list-group-item-heading">Yevhen Borunov</h4>
-    <p class="list-group-item-text">+380 (93) 348-23-85</p>
-  </a>
-  <a href="#" class="list-group-item">
-    <h4 class="list-group-item-heading">Susanne Folk</h4>
-    <p class="list-group-item-text">+380 (63) 849-23-54</p>
-  </a>
-</div>
-	Say hello to: <input type="text" ng-model="name">
+			<p class="list-group-item-text">{{contact.phone}}</p>
 
-	<h1>Hello, {{name}}!</h1>
+		</a>  
 
-	<div ng-controller="HelloCtrl">
-	
-		<span>{{getVal()}}</span>
 	</div>
+
+	<!-- Add contact modal -->
+	<div class="modal fade" id="contactModal">
+
+		<div class="modal-dialog">
+
+			<div class="modal-content">
+
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+	        		<h4 class="modal-title">{{modalInfo.title}}</h4>
+	      		</div>
+
+	        	<form name="modalForm" ng-submit="modalFormSubmit(modalForm.$valid)" novalidate>
+
+	      		<div class="modal-body">
+	        		
+					<div class="form-group" ng-class="{ 'has-error' : modalForm.name.$invalid && modalInfo.submitted }"> 
+						<label class="">Name</label>
+						<input type="text" name="name" class="form-control" ng-model="modalInfo.name" required>
+      					<p ng-show="modalForm.name.$invalid && modalInfo.submitted" class="help-block">Name is required</p>
+					</div>
+
+					<div class="form-group">
+						<label class="">Surname</label>
+						<input type="text" class="form-control" ng-model="modalInfo.surname">
+					</div>
+
+					<div class="form-group" ng-class="{ 'has-error' : modalForm.phone.$invalid && modalInfo.submitted }">
+						<label class="">Phone</label>
+						<input type="tel" name="phone" class="form-control" ng-model="modalInfo.phone" required>
+      					<p ng-show="modalForm.phone.$invalid && modalInfo.submitted" class="help-block">Phone is required</p>
+					</div>
+
+					<div class="form-group">
+						<label class="">Group</label>
+						<input type="text" class="form-control" ng-model="modalInfo.group">
+					</div>
+	      		</div>
+
+	      		<div class="modal-footer">
+	        		<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+	        		<button type="submit" class="btn btn-primary">{{modalInfo.submitText}}</button>
+	      		</div>
+
+				</form>
+
+	    	</div>    	
+	  	</div>
+	</div>
+
+</div>
+
 </body>
 </html>
