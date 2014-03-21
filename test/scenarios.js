@@ -5,7 +5,7 @@ describe('Contacts list app testing', function() {
 
     beforeEach(function() {
 
-        browser().navigateTo('angularjs.html');
+        browser().navigateTo('./');
     });
 
     it('count contacts in list', function () {
