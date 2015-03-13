@@ -1,0 +1,14 @@
+<div class="buttons prev" ng-click="move(slideIndex - 1)"></div>
+<div class="buttons next" ng-click="move(slideIndex + 1)"></div>
+<div class="viewport">
+    <ul class="overview">
+
+        <li ng-repeat="item in carouselItems" compile="carouselTemplate" ng-click="itemClickDisabled || carouselItemClicked(item)"
+            ng-class="{'left': (slideIndex == $index), 'center':  ((slideIndex + 1) == $index), 'right': ((slideIndex + 2) == $index)}">
+        </li>
+        
+        <li ng-repeat="item in carouselItemsMirrored" compile="carouselTemplate" ng-click="carouselItemClicked(item)"
+            ng-class="{'left': (slideIndex == (carouselItems.length + $index)), 'center':  ((slideIndex + 1) == (carouselItems.length + $index)), 'right': ((slideIndex + 2) == (carouselItems.length + $index))}">
+        </li>
+    </ul>
+</div>  

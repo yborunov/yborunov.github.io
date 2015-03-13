@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="app">
+<head>
+	<meta charset="UTF-8">
+	<title>AngularJS TinyCarousel module | Demo by Yuri Borunov</title>
+
+	<meta name="description" content="AngularJS Carousel, angular implementation of tinyCarousel plugin for jQuery">
+	<meta name="keywords" content="carousel, tinycarousel, angular carousel, angular tinycarousel, angularjs carousel">
+	<meta name="author" content="Yuri Borunov">
+
+	<link rel="stylesheet/less" type="text/css" href="tinycarousel.less" />
+
+	<style>
+		h1 {
+			text-align: center;
+		}
+		h2 {
+			text-align: center;
+			font-weight: 300;
+			font-size: 2em;
+		}
+
+		.clickResult {
+			margin-top: 10px;
+			text-align: center;
+			font-size: 1.1em;
+			color: #999798;
+		}
+
+		footer {
+			text-align: center;
+			margin-top: 20px;
+			font-size: 0.9em;
+		}
+
+		footer a {
+			color: #000;
+		}
+	</style>
+</head>
+<body>
+
+	<h1>AngularJS TinyCarousel module</h1>
+
+	<div ng-controller="mainCtrl">
+
+		<h2>Simple Carousel</h2>
+		<div class="tinycarousel" tiny-carousel="Carousel1"></div>
+
+		<h2>Carousel with auto-sliding</h2>
+		<div class="tinycarousel" tiny-carousel="Carousel2" tiny-carousel-interval="true"></div>
+		
+		<h2>Clickable Carousel</h2>
+		<div class="tinycarousel" tiny-carousel="Carousel3"></div>
+		<div class="clickResult" ng-bind="carouselClicked"></div>
+
+	</div>	
+
+	<a href="https://github.com/yborunov"><img style="position: absolute; top: 0; left: 0; border: 0;" src="https://camo.githubusercontent.com/567c3a48d796e2fc06ea80409cc9dd82bf714434/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_left_darkblue_121621.png"></a>
+
+	<footer>
+		&copy; <a href="https://github.com/yborunov" target="_blank">Yuri Borunov</a>, 2015
+	</footer>
+
+	<script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/less.js/2.4.0/less.min.js"></script>
+
+	<script src="tinycarousel.js"></script>
+	<script src="app.js"></script>
+
+</body>
+</html>

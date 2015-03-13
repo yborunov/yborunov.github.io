@@ -1,0 +1,86 @@
+
+.tinycarousel {
+	position: relative;
+	overflow: hidden;
+
+	.viewport {
+		position: relative;
+		overflow: hidden;
+
+		.overview {
+			list-style: none;
+			position: absolute;
+			padding: 0;
+			top: 0;
+
+			li {
+				float: left;
+				margin-right: 5px;
+			}
+		}
+	}
+
+	.buttons::before {
+		border-style: solid;
+		border-width: 0.35em 0.35em 0 0;
+		content: '';
+		display: inline-block;
+		height: 1.45em;
+		left: 0.15em;
+		position: relative;
+		top: 0.30em;
+		-webkit-transform: rotate(-45deg);
+		transform: rotate(-45deg);
+		width: 1.45em;
+		vertical-align: top;
+	}
+
+	.buttons {
+	    display: block;
+	    float: left;
+	    color: rgb(207, 207, 207);
+	    z-index: 1;
+	    cursor: pointer;
+		transition: all 200ms;
+		padding: 4px 12px 0px 9px;
+		border-radius: 3px;
+	}
+
+	.buttons:hover {
+		color: rgb(87, 87, 87);
+		background-color: #f5f5f5;
+		opacity: 1;
+	}
+
+
+	.buttons.next {
+		position: absolute;
+		right: 10px;
+		top: 55px;
+		-webkit-transform: rotate(90deg);
+		transform: rotate(90deg);
+		color: rgb(87, 87, 87);
+		background-color: #f5f5f5;
+		opacity: 0.8;
+	}
+
+	.buttons.prev {
+		position: absolute;
+		left: 10px;
+		top: 55px;
+		-webkit-transform: rotate(-90deg);
+		transform: rotate(-90deg);
+		color: rgb(87, 87, 87);
+		background-color: #f5f5f5;
+		opacity: 0.8;
+	}
+
+	.buttons.prev:hover,
+	.buttons.next:hover {
+		opacity: 1;
+	}
+
+	.disable {
+		visibility: hidden;
+	}
+}
